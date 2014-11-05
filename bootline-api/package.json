@@ -1,0 +1,25 @@
+{
+  "name": "bootlint-online",
+  "version": "0.0.1",
+  "description": "Bootlint implementation to check remote websites via HTTP",
+  "keywords": ["bootlint"],
+  "homepage": "https://github.com/eduardinni/bootlint-online",
+  "author": {
+    "name": "Eduardo Lomeli"
+  },
+  "repository": {},
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.9.2",
+    "cheerio": "^0.17.0",
+    "debug": "^2.1.0",
+    "express": "^4.10.0",
+    "morgan": "^1.4.1",
+    "request": "^2.47.0",
+    "semver": "^4.1.0"
+  },
+  "main": "./src/bootlint.js",
+  "scripts": {
+    "start": "./bin/www"
+  }
+}
