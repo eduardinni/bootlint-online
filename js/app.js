@@ -9,7 +9,7 @@ bootlintApp.controller('bootlintCtrl', function ($scope, $http) {
 		$scope.errorMsg = null;
 		$scope.lints = [];
 		
-		var bootlintUrl = 'http://localhost:7070/?callback=JSON_CALLBACK&url=' + url;
+		var bootlintUrl = 'https://bootlint.herokuapp.com/?callback=JSON_CALLBACK&url=' + url;
 		$http.jsonp(bootlintUrl, {url: url})
 			.success(function(data) {
 				$scope.lints = data;
