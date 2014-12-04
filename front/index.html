@@ -46,10 +46,10 @@
 		<div class="row">
 			<div class="col-md-10 col-md-offset-1">
 				<div class="alert alert-danger" role="alert" ng-show="errorMsg"><strong>Oops!</strong> {{errorMsg}}</div>
-				<div class="alert alert-success" role="alert" ng-show="noLints"><strong>Cool</strong> no Bootstrap lint problems with your code.</div>
+				<div class="alert alert-success" role="alert" ng-show="showNoLintsMsg"><strong>Cool,</strong> no Bootstrap lint problems with your code.</div>
 				
 				<div class="panel panel-primary" ng-show="lints.length">
-					<div class="panel-heading">Bootlint found some problems!</div>
+					<div class="panel-heading">Bootlint found some problems</div>
 					<table class="table">
 						<tr>
 							<th>ID</th>
@@ -66,7 +66,7 @@
 			</div>
 		</div>
 		
-		<div class="row">
+		<div class="row row-info">
 			<div class="col-md-6">
 				<h4>What's Bootlint?</h4>
         <p>Checks for several common HTML mistakes in webpages that are using Bootstrap in a fairly "vanilla" way. Vanilla Bootstrap's components/widgets require their parts of the DOM to conform to certain structures. Bootlint checks that instances of Bootstrap components have correctly-structured HTML. Optimal usage of Bootstrap also requires that your pages include certain <code>&lt;meta&gt;</code> tags, an HTML5 doctype declaration, etc.; Bootlint checks that these are present.</p>
