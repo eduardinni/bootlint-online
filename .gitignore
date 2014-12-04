@@ -1,4 +1,5 @@
 node_modules/
+api/node_modules/
 
 *.7z
 *.dmg
