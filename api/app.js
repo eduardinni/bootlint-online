@@ -5,10 +5,18 @@
 */
 
 var bootlint = require('bootlint');
+var _extend = require('util')._extend;
 var express = require('express');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var request = require('request');
+var pg = require('pg');
+
+var conString = process.env.DATABASE_URL + "?ssl=true";
+
+function shallowClone(obj) {
+  return _extend({}, obj);
+}
 
 function disabledIdsFor(req) {
   var rawIds = req.query.disable;
@@ -20,11 +28,45 @@ function disabledIdsFor(req) {
 
 function lintsFor(html, disabledIds) {
   var lints = [];
-  var reporter = function(lint) {
-    lints.push(lint);
+  var reporter = function (lint) {
+    var output = false;
+    if (lint.elements && lint.elements.length) {
+      var elements = lint.elements;
+      lint.elements = undefined;
+      elements.each(function (_, element) {
+        if (element.startLocation) {
+          var locatedLint = shallowClone(lint);
+          locatedLint.location = element.startLocation;
+          lints.push(locatedLint);
+          output = true;
+        }
+      });
+    }
+    if (!output) {
+      lint.elements = undefined;
+      lints.push(lint);
+    }
   };
+  
   bootlint.lintHtml(html, reporter, disabledIds);
   return lints;
+}
+
+function updateLintCounter(lints) { 
+  pg.connect(conString, function(err, client, done) {
+    if(err) {
+      return console.error('database connection error', err);
+    }
+    
+    lints.forEach(function(lint) {
+      client.query('UPDATE lints SET count = count + 1 WHERE id = $1', [lint.id], function(err, result) {
+        done();
+        if(err) {
+          return console.error('error running query', err);
+        }
+      });
+    });
+  });
 }
 
 var routes = express.Router();
@@ -43,12 +85,38 @@ routes.get('/', function(req, res) {
       request.get(url, function(error, response, body) {
         if(!error && response.statusCode == 200) {
           var lints = lintsFor(body, disabledIds);
-          lints.forEach(function(lint) {
-            lint.elements = undefined;
-          });
+          updateLintCounter(lints);
+          // DEBUG
           // console.log(JSON.stringify(lints, null, 2));
           res.status(200).jsonp(lints);
         }
+      });
+    },
+    'default': function() {
+      res.status(406).jsonp({
+        status: 406,
+        message: 'Not Acceptable', details: '"Accept" header must allow MIME type application/json'
+      });
+    }
+  });
+});
+
+routes.get('/stats', function(req, res) {
+  res.format({
+    'application/json': function() {
+      pg.connect(conString, function(err, client, done) {
+        if(err) {
+          return console.error('database connection error', err);
+        }
+    
+        client.query('SELECT id, description FROM lints ORDER BY count DESC LIMIT 5', function(err, result) {
+          done();
+          if(err) {
+            return console.error('error running query', err);
+          }
+          console.log(result);
+          res.status(200).jsonp(result.rows);
+        });
       });
     },
     'default': function() {
