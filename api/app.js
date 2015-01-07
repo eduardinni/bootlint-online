@@ -104,18 +104,17 @@ routes.get('/', function(req, res) {
 routes.get('/stats', function(req, res) {
   res.format({
     'application/json': function() {
-      pg.connect(conString, function(err, client, done) {
+      var client = new pg.Client(conString);
+      client.connect(function(err) {
         if(err) {
-          return console.error('database connection error', err);
+          return console.error('could not connect to postgres', err);
         }
-    
         client.query('SELECT id, description FROM lints ORDER BY count DESC LIMIT 5', function(err, result) {
-          done();
           if(err) {
             return console.error('error running query', err);
           }
-          console.log(result);
           res.status(200).jsonp(result.rows);
+          client.end();
         });
       });
     },
