@@ -1,6 +1,6 @@
 {
   "name": "bootlint-online",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bootlint implementation to check remote websites via HTTP",
   "keywords": [
     "bootlint"
@@ -28,5 +28,8 @@
   "main": "app.js",
   "scripts": {
     "start": "./bin/www"
+  },
+  "engines": {
+    "node": "0.10.x"
   }
 }

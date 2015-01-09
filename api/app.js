@@ -53,6 +53,7 @@ function lintsFor(html, disabledIds) {
 }
 
 function updateLintCounter(lints) { 
+  pg.defaults.poolSize = 0; // pooling will be disabled
   pg.connect(conString, function(err, client, done) {
     if(err) {
       return console.error('database connection error', err);
@@ -66,6 +67,7 @@ function updateLintCounter(lints) {
         }
       });
     });
+    pg.end();
   });
 }
 
