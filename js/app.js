@@ -6,6 +6,7 @@ bootlintApp.controller('bootlintCtrl', function ($scope, $http) {
   $scope.showNoLintsMsg = false;
   
   $scope.runBootlint = function(url) {
+    $scope.loading = true;
     $scope.errorMsg = null;
     $scope.showNoLintsMsg = false;
     $scope.lints = [];
@@ -13,12 +14,14 @@ bootlintApp.controller('bootlintCtrl', function ($scope, $http) {
     var bootlintUrl = 'https://bootlint.herokuapp.com/?callback=JSON_CALLBACK&url=' + url;
     $http.jsonp(bootlintUrl, {url: url})
       .success(function(data) {
+        $scope.loading = false;
         $scope.lints = data;
         
         if(data.length == 0)
           $scope.showNoLintsMsg = true;
       })
       .error(function(data){
+        $scope.loading = false;
         $scope.errorMsg = "there is a problem with the API, please check again later.";
       });
   }

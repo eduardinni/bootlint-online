@@ -49,9 +49,9 @@
             </div>
             <p><span class="help-block help-block-sm" ng-show="bootlintForm.url.$error.pattern">The URL is not valid yet...</span></p>
             <div class="text-center">
-              <button type="submit" class="btn btn-primary btn-lg btn-submit" ng-disabled="bootlintForm.$invalid">Check</button>
+              <button type="submit" class="btn btn-primary btn-lg btn-submit"
+                ng-disabled="bootlintForm.$invalid || loading" ng-class="{'btn-loading' : loading}">Check</button>
             </div>
-            
           </form>
         </div>
       </div>
