@@ -39,7 +39,8 @@
             </div>
             <p><span class="help-block help-block-sm" ng-show="bootlintForm.url.$error.pattern">The URL is not valid yet...</span></p>
             <div class="text-center">
-              <button type="submit" class="btn btn-primary btn-lg btn-submit" ng-disabled="bootlintForm.$invalid">Check</button>
+              <button type="submit" class="btn btn-primary btn-lg btn-submit"
+                ng-disabled="bootlintForm.$invalid || loading" ng-class="{'btn-loading' : loading}">Check</button>
             </div>
             
           </form>
@@ -49,6 +50,7 @@
     
     <div class="row">
       <div class="col-md-12">
+        <div class="loading-spinner" ng-show="loading"></div>
         <div class="alert alert-danger" role="alert" ng-show="errorMsg"><strong>Oops!</strong> {{errorMsg}}</div>
         <div class="alert alert-success" role="alert" ng-show="showNoLintsMsg"><strong>Cool,</strong> no Bootstrap lint problems with your code.</div>
         
