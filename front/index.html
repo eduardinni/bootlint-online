@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/bootlint.css">
   
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.1/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
   <script src="js/app.js"></script>
   
   <!--[if lt IE 9]>
@@ -29,13 +29,13 @@
     <div class="row">
       <div class="col-md-12">
         <div class="well">
-          <form name="bootlintForm" class="form form-vertical2" ng-submit="runBootlint(bootlintUrl)">
+          <form name="bootlintForm" class="form form-vertical2" ng-submit="runBootlint(urlToCheck)">
             <p class="lead">Search for Bootstrap problems by URL</p>
             <div class="form-group form-group-input">
               <label class="sr-only" for="url">URL</label>
-              <input type="url" name="url" class="form-control" id="bootlintForm_url" 
+              <input type="url" name="urlToCheck" class="form-control" id="bootlintForm_url" 
                   placeholder="http://www.yoursite.com" style="width:100%"
-                  ng-model="bootlintUrl" ng-pattern="patternUrl" required>
+                  ng-model="urlToCheck" ng-pattern="patternUrl" required>
             </div>
             <p><span class="help-block help-block-sm" ng-show="bootlintForm.url.$error.pattern">The URL is not valid yet...</span></p>
             <div class="text-center">
@@ -89,7 +89,9 @@
         <h4>Caveats</h4>
         <p>Bootlint assumes that your webpage is already valid HTML5. Use another tool, such as the <a href="http://validator.w3.org/">W3C validator</a>, to check that first. </p>
         <p>Bootlint assumes that you are using Bootstrap's default class names in your webpage, as opposed to taking advantage of the "mixins" functionality of Less or Sass to map them to custom class names. If you are using mixins, Bootlint may report some false-positive warnings. However, there are some Bootlint checks that are applicable even if you are using mixins pervasively.</p>
-
+        <h4>Using querystring</h4>
+        <p>Validates given URL and triggers bootlint check up.</p>
+        <p><pre>http://www.bootlint.com/?url=&lt;url_to_check&gt;</pre></p>
       </div>
     </div>
     
