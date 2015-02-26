@@ -17,7 +17,7 @@ bootlintApp.controller('bootlintCtrl', function ($scope, $http, $location) {
     $scope.showNoLintsMsg = false;
     $scope.lints = [];
             
-    var bootlintUrl = 'https://bootlint-online.api.bootlint.com/?callback=JSON_CALLBACK&url=' + url;
+    var bootlintUrl = 'http://bootlint-online.api.bootlint.com/?callback=JSON_CALLBACK&url=' + url;
     $http.jsonp(bootlintUrl, {url: url})
       .success(function(data) {
         $scope.loading = false;
