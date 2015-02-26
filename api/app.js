@@ -12,7 +12,7 @@ var bodyParser = require('body-parser');
 var request = require('request');
 var pg = require('pg');
 
-var conString = process.env.DATABASE_URL + "?ssl=true";
+var conString = process.env.DATABASE_URL;
 
 function shallowClone(obj) {
   return _extend({}, obj);
