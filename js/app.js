@@ -24,7 +24,7 @@ bootlintApp.controller('bootlintCtrl', function ($scope, $http, $location) {
     $scope.showNoLintsMsg = false;
     $scope.lints = [];
             
-    var bootlintUrl = 'http://localhost:7070/check';
+    var bootlintUrl = 'http://bootlint-online.api.bootlint.com/check';
     $http.post(bootlintUrl, {checkby: checkby, data: data})
       .success(function(data) {
         $scope.loading = false;
