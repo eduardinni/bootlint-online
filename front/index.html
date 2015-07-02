@@ -29,21 +29,41 @@
     <div class="row">
       <div class="col-md-12">
         <div class="well">
-          <form name="bootlintForm" class="form form-vertical2" ng-submit="runBootlint(urlToCheck)">
-            <p class="lead">Search for Bootstrap problems by URL</p>
-            <div class="form-group form-group-input">
-              <label class="sr-only" for="url">URL</label>
-              <input type="url" name="urlToCheck" class="form-control" id="bootlintForm_url" 
-                  placeholder="http://www.yoursite.com" style="width:100%"
-                  ng-model="urlToCheck" ng-pattern="patternUrl" required>
+          <p class="lead">Search for Bootstrap problems</p>
+          <div>
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active"><a href="#byUrl" aria-controls="byUrl" role="tab" data-toggle="tab">by URL</a></li>
+              <li role="presentation"><a href="#byDirect" aria-controls="byDirect" role="tab" data-toggle="tab">by Direct Input</a></li>
+            </ul>
+            <div class="tab-content tab-content-opts">
+              <div role="tabpanel" class="tab-pane active" id="byUrl">
+                <form name="bootlintByURLForm" class="form" ng-submit="runBootlint('url', urlToCheck)">
+                  <div class="form-group form-group-input">
+                    <label class="sr-only" for="bootlintByURLForm_url">URL</label>
+                    <input type="url" name="urlToCheck" class="form-control" id="bootlintByURLForm_url" 
+                        placeholder="http://www.yoursite.com" style="width:100%"
+                        ng-model="urlToCheck" ng-pattern="patternUrl" required>
+                  </div>
+                  <p><span class="help-block help-block-sm" ng-show="bootlintByURLForm.urlToCheck.$error.pattern">The URL is not valid yet...</span></p>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg btn-submit"
+                      ng-disabled="bootlintByURLForm.$invalid || loading" ng-class="{'btn-loading' : loading}">Check</button>
+                  </div>
+                </form>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="byDirect">
+                <form name="bootlintByDIForm" class="form" ng-submit="runBootlint('code', codeToCheck)">
+                  <div class="form-group form-group-input">
+                    <textarea class="form-control" rows="7" ng-model="codeToCheck" placeholder="Paste a complete HTML document here" required></textarea>
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg btn-submit"
+                      ng-disabled="(codeToCheck == undefined || codeToCheck == '') || loading" ng-class="{'btn-loading' : loading}">Check</button>
+                  </div>
+                </form>
+              </div>
             </div>
-            <p><span class="help-block help-block-sm" ng-show="bootlintForm.url.$error.pattern">The URL is not valid yet...</span></p>
-            <div class="text-center">
-              <button type="submit" class="btn btn-primary btn-lg btn-submit"
-                ng-disabled="bootlintForm.$invalid || loading" ng-class="{'btn-loading' : loading}">Check</button>
-            </div>
-            
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -54,7 +74,6 @@
         <div class="alert alert-success" role="alert" ng-show="showNoLintsMsg"><strong>Cool,</strong> no Bootstrap lint problems with your code.</div>
         
         <div ng-show="lints.length">
-          
           <div class="alert alert-info" role="alert">
             <strong>Bootlint found {{lints.length}} problems</strong>
           </div>
@@ -67,7 +86,6 @@
               <a href="https://github.com/twbs/bootlint/wiki/{{lint.id}}" target="_blank" class="btn btn-link btn-xs">more details <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
@@ -100,5 +118,8 @@
       <p><a href="https://github.com/eduardinni/bootlint-online">Bootlint Online</a> powered by <a href="https://github.com/twbs/bootlint">Bootlint</a></p>
     </div>
   </div>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>

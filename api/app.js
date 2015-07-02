@@ -74,28 +74,46 @@ function updateLintCounter(lints) {
 var routes = express.Router();
 
 routes.post('/', function(req, res) {
-  res.status(200).jsonp({status: 200, message: "Bootlint is online!"});
+  res.jsonp({status: 200, message: "Bootlint is online!"});
 });
 
-routes.get('/', function(req, res) {
+routes.post('/check', function(req, res) {
   res.format({
     'application/json': function() {
       var disabledIds = disabledIdsFor(req);
-      var url = req.query.url;
-      // console.log(JSON.stringify(req.query, null, 2));
       
-      request.get(url, function(error, response, body) {
-        if(!error && response.statusCode == 200) {
-          var lints = lintsFor(body, disabledIds);
-          updateLintCounter(lints);
-          // DEBUG
-          // console.log(JSON.stringify(lints, null, 2));
-          res.status(200).jsonp(lints);
+      if(req.body.checkby != null && req.body.data != null) {
+        if(req.body.checkby == 'url'){
+          var url = req.body.data;
+          request.get(url, function(error, response, body) {
+            if(!error && response.statusCode == 200) {
+              var lints = lintsFor(body, disabledIds);
+              updateLintCounter(lints);
+              res.json({lints: lints, error: null});
+            }
+            else {
+              res.json({lints: {}, error: "There is a problem requesting the URL you submitted (maybe 404, 500 error code, or takes too long to load)."});
+            }
+          });
         }
-      });
+        else if(req.body.checkby == 'code') {
+          if(req.body.data != null) {
+            var dibody = req.body.data;
+            var dilints = lintsFor(dibody, disabledIds);
+            updateLintCounter(dilints);
+            res.json({lints: dilints, error: null});
+          }
+          else {
+            res.json({lints: {}, error: "There is a problem with the code you submitted, maybe you didn't paste it completely (try again copying from &lt;html&gt; to &lt;/html&gt;)."});
+          }
+        }
+      }
+      else {
+        res.json({lints: {}, error: "There is a problem with the data you submitted, please try again."});
+      }
     },
     'default': function() {
-      res.status(406).jsonp({
+      res.status(406).json({
         status: 406,
         message: 'Not Acceptable', details: '"Accept" header must allow MIME type application/json'
       });
@@ -133,7 +151,13 @@ var app = express();
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false }));
+ 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.use('/', routes);
 
