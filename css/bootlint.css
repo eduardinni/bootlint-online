@@ -67,3 +67,11 @@
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+.tab-content-opts {
+  background: #fff;
+  padding: 30px 20px 15px 20px;
+  margin-bottom: 20px;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
