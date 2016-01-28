@@ -47,18 +47,18 @@ function lintsFor(html, disabledIds) {
       lints.push(lint);
     }
   };
-  
+
   bootlint.lintHtml(html, reporter, disabledIds);
   return lints;
 }
 
-function updateLintCounter(lints) { 
+function updateLintCounter(lints) {
   pg.defaults.poolSize = 0; // pooling will be disabled
   pg.connect(conString, function(err, client, done) {
     if(err) {
       return console.error('database connection error', err);
     }
-    
+
     lints.forEach(function(lint) {
       client.query('UPDATE lints SET count = count + 1 WHERE id = $1', [lint.id], function(err, result) {
         done();
@@ -81,13 +81,37 @@ routes.post('/check', function(req, res) {
   res.format({
     'application/json': function() {
       var disabledIds = disabledIdsFor(req);
-      
+
       if(req.body.checkby != null && req.body.data != null) {
         if(req.body.checkby == 'url'){
           var url = req.body.data;
           request.get(url, function(error, response, body) {
             if(!error && response.statusCode == 200) {
+              console.log(response.headers);
               var lints = lintsFor(body, disabledIds);
+
+              // W001 and W002 can be corrected via HTTP headers, let's check it...
+              var lintsToClean = [];
+              var filterlints = lints.forEach(function(lint, idx) {
+                if(lint.id == 'W001') {
+                  if(response.headers['content-type'].toLowerCase().indexOf('charset=utf-8') > -1) {
+                    lintsToClean.push(idx);
+                  }
+                }
+                if(lint.id == 'W002') {
+                  if(response.headers['x-ua-compatible'].toLowerCase().indexOf('ie=edge') > -1) {
+                    lintsToClean.push(idx);
+                  }
+                }
+              });
+
+              // Clean lints array for W001 and W002 successfully corrected in HTTP headers
+              if(lintsToClean.length > 0) {
+                while((idx=lintsToClean.pop()) != null) {
+                  lints.splice(idx, 1);
+                }
+              }
+
               updateLintCounter(lints);
               res.json({lints: lints, error: null});
             }
@@ -152,7 +176,7 @@ var app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
- 
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -185,7 +209,7 @@ app.use(function(err, req, res, next) {
     status: err.status,
     message: err.message
   };
-  
+
   if (!isHttpErr) {
     errJson.stack = err.stack;
   }
