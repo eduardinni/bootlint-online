@@ -87,20 +87,23 @@ routes.post('/check', function(req, res) {
           var url = req.body.data;
           request.get(url, function(error, response, body) {
             if(!error && response.statusCode == 200) {
-              console.log(response.headers);
               var lints = lintsFor(body, disabledIds);
 
               // W001 and W002 can be corrected via HTTP headers, let's check it...
               var lintsToClean = [];
               var filterlints = lints.forEach(function(lint, idx) {
                 if(lint.id == 'W001') {
-                  if(response.headers['content-type'].toLowerCase().indexOf('charset=utf-8') > -1) {
-                    lintsToClean.push(idx);
+                  if(response.headers['content-type'] != undefined) {
+                    if(response.headers['content-type'].toLowerCase().indexOf('charset=utf-8') > -1) {
+                      lintsToClean.push(idx);
+                    }
                   }
                 }
                 if(lint.id == 'W002') {
-                  if(response.headers['x-ua-compatible'].toLowerCase().indexOf('ie=edge') > -1) {
-                    lintsToClean.push(idx);
+                  if(response.headers['x-ua-compatible'] != undefined) {
+                    if(response.headers['x-ua-compatible'].toLowerCase().indexOf('ie=edge') > -1) {
+                      lintsToClean.push(idx);
+                    }
                   }
                 }
               });
