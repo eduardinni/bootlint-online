@@ -17,13 +17,13 @@ bootlintApp.controller('bootlintCtrl', function ($scope, $http, $location) {
   $scope.showURLErrors = false;
   $scope.showDIErrors = false;
   $scope.showGenErrors = false;
-    
+
   $scope.runBootlint = function(checkby, data) {
     $scope.loading = true;
     $scope.errorMsg = null;
     $scope.showNoLintsMsg = false;
     $scope.lints = [];
-            
+
     var bootlintUrl = 'http://localhost:7070/check';
     $http.post(bootlintUrl, {checkby: checkby, data: data})
       .success(function(data) {
@@ -41,11 +41,11 @@ bootlintApp.controller('bootlintCtrl', function ($scope, $http, $location) {
         $scope.errorMsg = "there is a problem with the API, please check again later.";
       });
   }
-  
+
   if($location.search().url) {
     $scope.urlToCheck = $location.search().url;
     if($scope.patternUrl.test($scope.urlToCheck))
-      $scope.runBootlintByURL('url', $scope.urlToCheck);
+      $scope.runBootlint('url', decodeURIComponent($scope.urlToCheck));
     else
       $scope.errorMsg = "the URL are not valid.";
   }
