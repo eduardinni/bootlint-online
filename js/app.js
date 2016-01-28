@@ -45,7 +45,7 @@ bootlintApp.controller('bootlintCtrl', function ($scope, $http, $location) {
   if($location.search().url) {
     $scope.urlToCheck = $location.search().url;
     if($scope.patternUrl.test($scope.urlToCheck))
-      $scope.runBootlintByURL('url', $scope.urlToCheck);
+      $scope.runBootlint('url', $scope.urlToCheck);
     else
       $scope.errorMsg = "the URL are not valid.";
   }
