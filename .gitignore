@@ -1,5 +1,6 @@
 node_modules/
 api/node_modules/
+build/
 
 *.7z
 *.dmg
@@ -13,7 +14,7 @@ api/node_modules/
 *.log
 *.sql
 *.sqlite
- 
+
 .DS_Store
 .DS_Store?
 ._*
@@ -21,3 +22,4 @@ api/node_modules/
 .Trashes
 ehthumbs.db
 Thumbs.db
+npm-debug.log
