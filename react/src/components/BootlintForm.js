@@ -54,7 +54,7 @@ export default class BootlintForm extends Component {
   }
 
   runBootlintByURL() {
-    var urlRegex = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
+    var urlRegex = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,20}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
     if(this.state.urlParam.match(urlRegex)) {
       this.runBootlint('url', this.state.urlParam);
     }
