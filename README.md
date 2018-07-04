@@ -4,4 +4,4 @@
 
 Bootlint implementation of [Bootlint tool](https://github.com/twbs/bootlint) to check remote websites via HTTP. A node.js back-end with React front-end
 
-It's up and running at http://www.bootlint.com
+It's up and running at https://www.bootlint.com
